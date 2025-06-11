@@ -4,20 +4,17 @@ server {
 
     listen 127.0.0.1:80;
     listen 127.0.0.1:443 ssl;
-
     http2 on;
 
-    server_name example.com www.example.com;
+    server_name example.com;
 
-    # Let's Encrypt SSL
+    # SSL
     include /etc/nginx/conf.d/ssl.conf;
     ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
 
-    # Block Exploits
+    # Security
     include /etc/nginx/custom.conf.d/block-exploits.conf;
-
-    # Security Headers
     add_header Strict-Transport-Security $hsts_header always;
     add_header X-Content-Type-Options nosniff;
     add_header X-Frame-Options DENY;
@@ -25,10 +22,10 @@ server {
 
     # Google Chrome
     add_header Alt-Svc "clear";
-
-    # Force SSL
-    include /etc/nginx/custom.conf.d/force-ssl.conf;
     
+    # Force SSL
+    include /etc/nginx/custom.conf.d/force-ssl.conf;  
+
     root /var/www/vhosts/example.com/httpdocs;		
     index  index.php index.html index.htm;
 
