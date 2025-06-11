@@ -1,0 +1,17 @@
+su root www-data
+/var/log/php-fpm/*/*.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0664 root www-data
+    sharedscripts
+
+    postrotate
+        if [ -f /var/run/php8.3-fpm.pid ]; then
+            kill -USR1 $(cat /var/run/php8.3-fpm.pid)
+        fi
+    endscript
+}
