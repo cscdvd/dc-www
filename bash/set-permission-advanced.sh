@@ -2,9 +2,9 @@
 set -eu
 
 # Config
-path="/var/www/vhosts/"
+path="/var/www/vhosts"
 website="sitename.com"
-full_path="$path$website"
+full_path="$path/$website"
 user="root"
 group="www-data"
 
@@ -29,9 +29,7 @@ echo "INFO: total number of folders = $total_folders"
 # Chown on all items
 if [ "$total_items" -gt 0 ]; then
   echo "INFO: running chown for $total_items items"
-  find "$full_path" -print0 \
-    | pv --null --line-mode -s "$total_items" -N "chown" \
-    | xargs --null chown "$user":"$group"
+  find "$full_path" -print0 | pv -0 -l -s "$total_items" -N "chown" | xargs -0 chown "$user":"$group"
 else
   echo "INFO: no items to chown"
 fi
@@ -39,9 +37,7 @@ fi
 # Chmod on all files
 if [ "$total_files" -gt 0 ]; then
   echo "INFO: running chmod 664 on $total_files files"
-  find "$full_path" -type f -print0 \
-    | pv --null --line-mode -s "$total_files" -N "chmod-files" \
-    | xargs --null chmod 664
+  find "$full_path" -type f -print0 | pv -0 -l -s "$total_files" -N "chmod-files" | xargs -0 chmod 664
 else
   echo "INFO: no files to chmod"
 fi
@@ -49,9 +45,7 @@ fi
 # Chmod on all dirs and setgid
 if [ "$total_folders" -gt 0 ]; then
   echo "INFO: running chmod 2775 on $total_folders dirs"
-  find "$full_path" -type d -print0 \
-    | pv --null --line-mode -s "$total_folders" -N "chmod-dirs" \
-    | xargs --null chmod 2775
+  find "$full_path" -type d -print0 | pv -0 -l -s "$total_folders" -N "chmod-dirs" | xargs -0 chmod 2775
 else
   echo "INFO: no dirs to chmod"
 fi
