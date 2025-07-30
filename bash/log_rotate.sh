@@ -11,15 +11,12 @@ if [ ! -d "$LOGDIR" ]; then
 fi
 
 echo "INFO: compressing log files in $LOGDIR started."
-echo "INFO: init nullglob, *.log will return null if no files are found."
-shopt -s nullglob
 
 echo "INFO: looping through log files in $LOGDIR."
 for log in "$LOGDIR"/*.log; do
-  echo "INFO: processing $log."
-  [ -e "$log" ] || continue
+  [ -e "$log" ] || continue  # salta se non c’è match
 
-  echo "INFO: compressing $log."
+  echo "INFO: processing $log."
   if gzip -c "$log" > "$log.gz"; then
     echo "INFO: cleaning up $log."
     : > "$log"
